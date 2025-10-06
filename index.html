@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -247,15 +247,14 @@
   const $$ = sel => Array.from(document.querySelectorAll(sel));
   $('#year').textContent = new Date().getFullYear();
 
-  // Theme: load from storage or system preference
+  // ===== Theme: default LIGHT; respect saved choice only =====
   const themeBtn = $('#themeBtn');
-  let dark = (localStorage.getItem('ydiet-theme') ??
-             (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'true':'false')) === 'true';
+  const saved = localStorage.getItem('ydiet-theme'); // 'true' for dark, 'false' for light
+  let dark = saved !== null ? saved === 'true' : false; // default to LIGHT
   function setTheme(){
-    document.documentElement.setAttribute('data-theme', dark? 'dark' : 'light');
-    themeBtn.textContent = dark? '☀️ Light mode' : '🌙 Dark mode';
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    themeBtn.textContent = dark ? '☀️ Light mode' : '🌙 Dark mode';
     localStorage.setItem('ydiet-theme', String(dark));
-    // Repaint charts to match theme colors
     if(window.myCharts) window.myCharts.forEach(c=>c && c.destroy && c.destroy());
     drawCharts();
   }
@@ -437,4 +436,3 @@
   </script>
 </body>
 </html>
-
